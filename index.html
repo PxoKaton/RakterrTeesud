@@ -1,14 +1,13 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit&display=swap" rel="stylesheet" />
+
   <title>เค้าขอโทดดด ให้อภัยเค้าได้ไหมม😓</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       background-color: #ffe4e1;
@@ -19,7 +18,6 @@
       height: 100vh;
       overflow: hidden;
       font-size: 14px;
-      position: relative;
     }
 
     .container {
@@ -57,16 +55,8 @@
       min-width: 80px;
     }
 
-    #yesBtn {
-      background-color: #4CAF50;
-      color: white;
-    }
-
-    #noBtn {
-      background-color: #f44336;
-      color: white;
-      z-index: 9999;
-    }
+    #yesBtn { background-color: #4CAF50; color: white; }
+    #noBtn { background-color: #f44336; color: white; z-index: 9999; }
 
     img {
       width: 100%;
@@ -74,39 +64,52 @@
       margin-bottom: 15px;
     }
 
+    .heart {
+      position: fixed;
+      width: 24px;
+      height: 24px;
+      background: red;
+      transform: rotate(45deg);
+      animation: floatUp 2s ease-out forwards;
+      z-index: 9999;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      background: red;
+      border-radius: 50%;
+    }
+
+    .heart::before { top: -12px; left: 0; }
+    .heart::after { left: -12px; top: 0; }
+
+    @keyframes floatUp {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-200px) scale(1.5); }
+    }
+
     @keyframes wiggleZoom {
-      0%   { transform: translate(0, 0) scale(1); }
-      25%  { transform: translate(-10px, 0) scale(1.05); }
-      50%  { transform: translate(10px, 0) scale(1.1); }
-      75%  { transform: translate(-5px, 0) scale(1.05); }
+      0% { transform: translate(0, 0) scale(1); }
+      25% { transform: translate(-10px, 0) scale(1.05); }
+      50% { transform: translate(10px, 0) scale(1.1); }
+      75% { transform: translate(-5px, 0) scale(1.05); }
       100% { transform: translate(0, 0) scale(1); }
     }
-
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 1.2em;
-      }
-
-      button {
-        min-width: 70px;
-        padding: 8px 16px;
-        font-size: 0.9em;
-      }
-    }
-
-    @media (min-width: 481px) and (max-width: 768px) {
-      h1 {
-        font-size: 1.3em;
-      }
-
-      .container {
-        max-width: 400px;
-      }
+    
+    .container, .final-message {
+    background: #fffafa;
+     padding: 24px;
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container" id="mainContainer">
     <img src="https://media.tenor.com/GAnWQh5LnF0AAAAM/love.gif" alt="Cute Cat" />
     <h1>เค้าขอโทดดด ให้อภัยเค้าได้ไหมม😓</h1>
     <div class="buttons" id="buttonWrapper">
@@ -124,10 +127,8 @@
       const btnWidth = noBtn.offsetWidth;
       const btnHeight = noBtn.offsetHeight;
       const padding = 10;
-
       const maxX = window.innerWidth - btnWidth - padding;
       const maxY = window.innerHeight - btnHeight - padding;
-
       const containerRect = document.querySelector('.container').getBoundingClientRect();
 
       let x, y;
@@ -142,7 +143,6 @@
       );
 
       noBtn.style.animation = 'wiggleZoom 0.4s ease';
-
       setTimeout(() => {
         noBtn.style.left = `${x}px`;
         noBtn.style.top = `${y}px`;
@@ -163,9 +163,64 @@
     noBtn.addEventListener('mouseover', activateMove);
     noBtn.addEventListener('touchstart', activateMove);
 
-    document.getElementById('yesBtn').addEventListener('click', () => {
-      alert("Yay! Let's be Valentines!");
+    function createHeartRandom() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.style.left = `${Math.random() * window.innerWidth}px`;
+      heart.style.top = `${window.innerHeight}px`;
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 2000);
+    }
+
+    function showFinalMessage() {
+      document.body.innerHTML = `
+        <div style="background-color: #ffe4e1; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: Arial, sans-serif; margin: 0;">
+          <div style="background-color: #fff; padding: 20px; border-radius: 16px; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); text-align: center; max-width: 360px; width: 90%;">
+            <h1 style="color: #e6005c; font-size: 1.5em; margin-bottom: 20px;">เค้ารู้ว่าเธอต้องใจอ่อนนน~~~ รักเธอที่สุดเลยยยยย 💖</h1>
+            <img src="https://media1.tenor.com/m/iP9Jm4-D1PEAAAAC/peluk.gif" alt="Hug" style="max-width: 300px; width: 100%; margin-bottom: 20px;" />
+            <button id="forcedYesBtn" style="padding: 10px 20px; font-size: 1em; background-color: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer;">
+              ก้มันบังคับให้กดหนิ!!!
+            </button>
+          </div>
+        </div>
+      `;
+
+      let interval = setInterval(() => {
+        for (let i = 0; i < 5; i++) createHeartRandom();
+      }, 100);
+      setTimeout(() => clearInterval(interval), 3000);
+    }
+
+    function showSecondMessage() {
+  document.body.innerHTML = `
+    <div style="background-color: #ffe4e1; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: 'Kanit', sans-serif; margin: 0;">
+      <div style="background-color: #fffafa; padding: 24px; border-radius: 20px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); text-align: left; max-width: 380px; width: 90%; line-height: 1.6;">
+        <h2 style="color: #e91e63; text-align: center;">แหนะ ก็ใช้แหละ😅</h2>
+        <p>คือเค้าขอโทษ รอบนี้เค้าผิดจริงๆ ที่ทำตัวงี่เง่าจนเธอนั่งเครียดขนาดนี้... ทั้งที่เค้าก็เคยพูดแล้วว่าไม่อยากทำเธอเครียดหรือเสียใจ</p>
+        <p style="color: #e91e63;">เค้าไม่อยากให้การที่เธอมาคบกับเค้าแล้วต้องมานั่งรู้สึกผิดหรือเครียด อยากให้เธอสบายใจ... เป็นที่พักพิงใจให้กัน</p>
+        <p>เค้าชอบที่เธอเป็นเธอหนิ ไม่ได้ชอบเพราะเหมือนคนอื่นสักหน่อย เค้ารักเธอเพราะเธอคือ "พั้นช์" ไงครับ</p>
+        <p style="color: #e91e63;">เพราะงั้นเลิกกดดัน หรือโทษตัวเองนะครับ เธอเป็นเธอ มีความสุขในแบบของตัวเอง คือสิ่งที่เค้าต้องการที่สุดแล้ว</p>
+        <p>เค้าจะไม่ให้เรื่องงี่เง้าอะไรพวกนี้เกิดขึ้นอีกแน่นอน อย่าให้ความไม่เข้าใจกันมาพรากเราออกจากกันเลยนะเธอ เเล้วเค้าจะยืนยันเค้าก็จะยืนยันคำเดิม ว่า</p>
+        <h3 style="text-align: center; color: #e91e63;">เค้ารักเธอที่สุดนะครับ คนเก่งของเค้า💖</h3>
+        <img src="1736018350581.jpg" style="max-width: 100%; border-radius: 12px; margin-top: 15px;" />
+      </div>
+    </div>
+  `;
+}
+
+
+    document.getElementById('yesBtn').addEventListener('click', showFinalMessage);
+
+    document.addEventListener("click", function(e) {
+      if (e.target && e.target.id === "forcedYesBtn") {
+        showSecondMessage();
+      }
     });
+
+    // You must replace this with your actual base64 image
+    function awaitImageBase64() {
+      return 'iVBORw0KGgoAAAANSUhEUgAAA...'; // <<< แทรก base64 ของภาพที่คุณแนบไว้
+    }
   </script>
 </body>
 </html>
